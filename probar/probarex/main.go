@@ -6,11 +6,12 @@ import (
 
 	"github.com/itchio/headway/probar"
 	"github.com/itchio/headway/tracker"
+	"github.com/itchio/headway/united"
 )
 
 func main() {
 	tr := tracker.New(tracker.Opts{
-		ByteAmount: &tracker.ByteAmount{Value: 600 * 1024 * 1024},
+		ByteAmount: &tracker.ByteAmount{Value: 542 * 1024 * 1024},
 	})
 	pb := probar.New(tr, probar.Opts{
 		ShowTimeLeft: true,
@@ -24,6 +25,9 @@ func main() {
 	speed := 0.002
 	progress := 0.0
 	factor := 1.07
+
+	printed := false
+	printed2 := false
 
 	for {
 		rounds++
@@ -44,9 +48,19 @@ func main() {
 			tr.SetProgress(progress)
 		}
 
+		if !printed && progress >= 0.1 {
+			pb.Println("Already 10% done!")
+			printed = true
+		}
+
+		if !printed2 && progress >= 0.9 {
+			pb.Println("Almost there!")
+			printed2 = true
+		}
+
 		time.Sleep(100 * time.Millisecond)
 	}
 
 	stats := tr.Finish()
-	fmt.Printf("Fake-downloaded %v in %v, average bps: %v\n", stats.ByteAmount(), stats.Duration(), stats.AverageBPS())
+	fmt.Printf("Fake-downloaded %v in %s, @ %v on average\n", stats.ByteAmount(), united.FormatDuration(stats.Duration()), stats.AverageBPS())
 }

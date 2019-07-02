@@ -37,6 +37,14 @@ func FormatBPS(size int64, duration time.Duration) string {
 
 // FormatDuration formats a duration
 func FormatDuration(d time.Duration) string {
+	if d < 3*time.Second {
+		return "a few seconds"
+	}
+
+	if d < time.Minute {
+		return fmt.Sprintf("%.0fs", d.Seconds())
+	}
+
 	res := ""
 	if d > time.Hour*24 {
 		res = fmt.Sprintf("%dd", d/24/time.Hour)

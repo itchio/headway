@@ -9,9 +9,9 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/itchio/headway/united"
 	"github.com/itchio/headway/state"
 	"github.com/itchio/headway/tracker"
+	"github.com/itchio/headway/united"
 )
 
 // PrintFunc is the type of a function that prints a line
@@ -64,6 +64,14 @@ type Bar interface {
 	// SetScale sets the scale of the bar. It can be scaled
 	// from 0.0 to 1.0 to indicate the progress of a first task.
 	SetScale(scale float64)
+
+	// Println prints a line in a way that doesn't interfere with the
+	// progress bar
+	Println(s string)
+
+	// Printfln prints a line in a way that doesn't interfere with the
+	// progress bar
+	Printfln(s string, a ...interface{})
 }
 
 // New creates a new progress bar tracking the given tracker
@@ -98,6 +106,8 @@ type bar struct {
 
 	finishChan chan struct{}
 	finished   bool
+
+	lines []string
 
 	prefix  string
 	postfix string
@@ -139,8 +149,24 @@ func (b *bar) finish() {
 
 	close(b.finishChan)
 	b.finished = true
+	b.clear()
+}
 
-	b.write()
+func (b *bar) Println(s string) {
+	b.mutex.Lock()
+	defer b.mutex.Unlock()
+
+	b.lines = append(b.lines, s)
+}
+
+func (b *bar) Printfln(s string, a ...interface{}) {
+	b.mutex.Lock()
+	defer b.mutex.Unlock()
+
+	b.lines = append(b.lines, fmt.Sprintf(s, a...))
+}
+
+func (b *bar) clear() {
 	b.opts.Printf("\r%s\r", strings.Repeat(" ", b.opts.Width))
 }
 
@@ -148,6 +174,15 @@ func (b *bar) write() {
 	stats := b.tracker.Stats()
 	current := b.tracker.Progress()
 	width := b.opts.Width
+
+	// print lines
+	if len(b.lines) > 0 {
+		b.clear()
+		for _, line := range b.lines {
+			b.opts.Printf("%s\n", line)
+		}
+		b.lines = nil
+	}
 
 	var percentBox, countersBox, timeLeftBox, speedBox, barBox, end, out string
 	th := b.theme
