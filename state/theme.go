@@ -35,11 +35,11 @@ func getCharset() string {
 		return "cp437"
 	}
 
-	var utf8 = ".UTF-8"
-	if strings.Contains(os.Getenv("LC_ALL"), utf8) ||
-		os.Getenv("LC_CTYPE") == "UTF-8" ||
-		strings.Contains(os.Getenv("LANG"), utf8) {
-		return "unicode"
+	for _, envkey := range []string{"LC_ALL", "LC_CTYPE", "LANG"} {
+		envval := os.Getenv(envkey)
+		if strings.HasSuffix(envval, ".UTF-8") || strings.HasSuffix(envval, ".utf8") {
+			return "unicode"
+		}
 	}
 
 	return "ascii"
