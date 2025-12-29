@@ -1,6 +1,6 @@
 # headway
 
-[![Build Status](https://travis-ci.org/itchio/headway.svg?branch=master)](https://travis-ci.org/itchio/headway)
+[![Test](https://github.com/itchio/headway/actions/workflows/test.yml/badge.svg)](https://github.com/itchio/headway/actions/workflows/test.yml)
 [![GoDoc](https://godoc.org/github.com/itchio/headway?status.svg)](https://godoc.org/github.com/itchio/headway)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/itchio/headway/blob/master/LICENSE)
 [![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
