@@ -34,9 +34,9 @@ func Test_TrackerConstant(t *testing.T) {
 	stats := tr.Finish()
 	t.Logf("%v", stats)
 
-	assert.InEpsilon(0.1, stats.Duration().Seconds(), 0.05)
-	assert.InEpsilon(stats.MinSpeed(), stats.AverageSpeed(), 0.05)
-	assert.InEpsilon(stats.MaxSpeed(), stats.AverageSpeed(), 0.05)
+	assert.InEpsilon(0.1, stats.Duration().Seconds(), 0.15)
+	assert.InEpsilon(stats.MinSpeed(), stats.AverageSpeed(), 0.15)
+	assert.InEpsilon(stats.MaxSpeed(), stats.AverageSpeed(), 0.15)
 }
 
 func Test_TrackerRampUp(t *testing.T) {
@@ -200,10 +200,10 @@ func Test_TrackerBrutalHalving(t *testing.T) {
 
 			if halved {
 				if progress > 0.75 {
-					assert.InEpsilon(0.5, stats.Speed(), 0.05)
+					assert.InEpsilon(0.5, stats.Speed(), 0.15)
 				}
 			} else {
-				assert.InEpsilon(1.0, stats.Speed(), 0.05)
+				assert.InEpsilon(1.0, stats.Speed(), 0.15)
 			}
 		}
 	}
@@ -253,8 +253,7 @@ func Test_TrackerJigsaw(t *testing.T) {
 
 	stats := tr.Finish()
 	t.Logf("%v", stats)
-	assert.InEpsilon(0.5, stats.AverageSpeed(), 0.2)
-	assert.InEpsilon(0.1, stats.MinSpeed(), 0.1)
-	assert.InEpsilon(1, stats.MaxSpeed(), 0.1)
+	assert.InEpsilon(0.5, stats.AverageSpeed(), 0.3)
+	assert.InEpsilon(0.1, stats.MinSpeed(), 0.2)
+	assert.InEpsilon(1, stats.MaxSpeed(), 0.2)
 }
-

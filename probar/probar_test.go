@@ -20,4 +20,3 @@ func ExampleBar() {
 
 	tr.Finish()
 }
-
